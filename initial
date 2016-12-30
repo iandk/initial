@@ -1,0 +1,32 @@
+#!/bin/bash
+
+if [ -z "$1" ] && [ -z "$2" ]
+      then
+      echo "Usage: initial [IP] [FQDN]"
+      exit 1
+    fi
+
+# Variable
+
+ip=$1
+fqdn=$2
+
+# Gateway
+
+baseip=`echo $ip | cut -d"." -f1-3`
+gw=$baseip".1"
+
+
+
+# Network interfaces
+
+echo "address $ip
+      gateway $gw" >> /root/interfaces
+service networking restart
+
+
+# Hostname
+
+echo "$ip      $fqdn           $fqdn"  >> /etc/hosts
+echo "$fqdn" > /etc/hostname
+hostname -F /etc/hostname
