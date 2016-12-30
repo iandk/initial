@@ -21,7 +21,7 @@ gw=$baseip".1"
 # Network interfaces
 
 echo "address $ip
-      gateway $gw" >> /root/interfaces
+      gateway $gw" >> /etc/network/interfaces
 service networking restart
 
 
