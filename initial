@@ -30,3 +30,7 @@ service networking restart
 echo "$ip      $fqdn           $fqdn"  >> /etc/hosts
 echo "$fqdn" > /etc/hostname
 hostname -F /etc/hostname
+
+
+# Delete Script
+rm -- "$0"
