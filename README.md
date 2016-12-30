@@ -5,7 +5,7 @@
 Download and save the script
 
 ```
-wget -P /usr/local/bin  https://raw.githubusercontent.com/ianklemm/initial/master/initial
+wget -P /usr/local/bin https://raw.githubusercontent.com/ianklemm/initial/master/initial
 ```
 
 ```
