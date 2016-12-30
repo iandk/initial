@@ -1,6 +1,6 @@
 # initial
 
-## Install
+## Installation
 
 Download and save the script
 
