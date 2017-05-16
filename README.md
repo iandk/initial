@@ -9,7 +9,7 @@ wget -P /usr/local/bin https://raw.githubusercontent.com/ianklemm/initial/master
 ```
 
 ```
-chmod +x /usr/local/bin/initial
+chmod u+x /usr/local/bin/initial
 ```
 
 ## Usage
