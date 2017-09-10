@@ -2,6 +2,12 @@
 
 ## Installation
 
+Backup old network config
+
+```
+cp -a /etc/network/interfaces /etc/network/interfaces.bak
+```
+
 Download and save the script
 
 ```
