@@ -65,7 +65,7 @@ hostname -F /etc/hostname
 
 # Check if user submited an IPv4 and IPv6 address. If both exist: Dualstack; If only IPv6: IPv6 only
 
-    if [ -z "$ipv4" ]
+if [ "$subnetv4" == "$ipv4" ]
     then
 
       # IPv6 only
