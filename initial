@@ -7,17 +7,12 @@ if [[ $EUID -ne 0 ]]; then
 
 # Variables
 
-# ADJUST SETTINGS HERE !!!
-
 
 nic=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
 gwv4=10.0.0.10
 gwv6=2a06:1111:1111:1111::10
 p2p=10.0.0.10
 netmask=64
-
-# DO NOT CHANGE AFTER THIS LINE !!!
-
 
 
 read -e -p "Enter Hostname: " hostname
@@ -50,7 +45,7 @@ hostname -F /etc/hostname
 
 # Network config
 
-# Check if user submited IPv4 and IPv6 address. If both exists: Dualstack; If only IPv6: IPv6 only
+# Check if user submited an IPv4 and IPv6 address. If both exist: Dualstack; If only IPv6: IPv6 only
 
     if [ -z "$ipv4" ]
     then
