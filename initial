@@ -1,36 +1,84 @@
 #!/bin/bash
-
-if [ -z "$1" ] && [ -z "$2" ]
-      then
-      echo "Usage: initial [IP] [FQDN]"
+if [[ $EUID -ne 0 ]]; then
+      echo "This script must be run as root" 1>&2
       exit 1
     fi
 
-# Variable
 
-ip=$1
-fqdn=$2
+# Variables
 
-# Gateway
-
-baseip=`echo $ip | cut -d"." -f1-3`
-gw=$baseip".1"
+# ADJUST SETTINGS HERE !!!
 
 
+nic=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
+gwv4=10.0.0.10
+gwv6=2a06:1111:1111:1111::10
+p2p=10.0.0.10
+netmask=64
 
-# Network interfaces
-
-echo "address $ip
-      gateway $gw" >> /etc/network/interfaces
-service networking restart
+# DO NOT CHANGE AFTER THIS LINE !!!
 
 
-# Hostname
 
-echo "$ip      $fqdn           $fqdn"  >> /etc/hosts
-echo "$fqdn" > /etc/hostname
+read -e -p "Enter Hostname: " hostname
+read -e -p "Enter IPv4: " -i "10.0.0." ipv4
+read -e -p "Enter IPv6: " -i "2a06:1111:1111:1111::" ipv6
+
+
+
+# Backup configs
+
+cp /etc/network/interfaces /etc/network/interfaces.bak
+cp /etc/hosts /etc/hosts.bak
+cp /etc/hostname /etc/hostname.bak
+
+
+# Set hostname
+
+echo $hostname > /etc/hostname
+echo "$ipv4 $hostname $hostname
+      $ipv6 $hostname $hostname
+      127.0.0.1 localhost
+      ::1 ip6-localhost ip6-loopback
+      fe00::0 ip6-localnet
+      ff00::0 ip6-mcastprefix
+      ff02::1 ip6-allnodes
+      ff02::2 ip6-allrouters
+      ff02::3 ip6-allhosts" > /etc/hosts
 hostname -F /etc/hostname
 
 
-# Delete Script
-rm -- "$0"
+# Network config
+
+# Check if user submited IPv4 and IPv6 address. If both exists: Dualstack; If only IPv6: IPv6 only
+
+    if [ -z "$ipv4" ]
+    then
+
+      # IPv6 only
+      echo "auto lo
+                iface lo inet loopback
+
+            auto $nic
+            iface $nic inet6 static
+                address $ipv6
+                netmask $netmask
+                gateway $gwv6" > /etc/network/interfaces
+    else
+
+      # Dualstack
+      echo "auto lo
+                iface lo inet loopback
+
+            auto $nic
+                iface $nic inet static
+                address $ipv4
+                gateway $gwv4
+                pointopoint $p2p
+                dns-nameservers 8.8.8.8 8.8.4.4
+            iface $nic inet6 static
+                address $ipv6
+                netmask $netmask
+                gateway $gwv6" > /etc/network/interfaces
+    fi
+reboot
