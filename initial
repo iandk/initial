@@ -5,19 +5,37 @@ if [[ $EUID -ne 0 ]]; then
     fi
 
 
-# Variables
+# Config
 
 
+#
+# Adjust your settings here !!! 
+#
+
+# Automatic NIC name retrieval
 nic=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
+# IPv4 Gatway
 gwv4=10.0.0.10
+# IPv6 Gateway
 gwv6=2a06:1111:1111:1111::10
+# Subnet IPv4 (Note that the last octet is missing, which is asked when running the script)
+subnetv4=10.0.0.
+# Subnet IPv6 (Note that the last octet is missing, which is asked when running the script)
+subnetv6=2a06:1111:1111:1111::
+# IPv4 Pointopoint Address which equals the IPv4 Gateway (Required by Hetzner)
 p2p=10.0.0.10
+# IPv6 subnet size
 netmask=64
 
 
+# 
+# No changes after this line !!!
+#
+
+
 read -e -p "Enter Hostname: " hostname
-read -e -p "Enter IPv4: " -i "10.0.0." ipv4
-read -e -p "Enter IPv6: " -i "2a06:1111:1111:1111::" ipv6
+read -e -p "Enter IPv4: " -i $subnetv4 ipv4
+read -e -p "Enter IPv6: " -i $subnetv6 ipv6
 
 
 
