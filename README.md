@@ -2,12 +2,6 @@
 
 ## Installation
 
-Backup old network config
-
-```
-cp -a /etc/network/interfaces /etc/network/interfaces.bak
-```
-
 Download and save the script
 
 ```
@@ -20,20 +14,6 @@ chmod u+x /usr/local/bin/initial
 
 ## Usage
 
-```
-initial [IP] [FQDN]
-```
-
-```
-initial  192.0.2.10 srv.mydomain.tld
-```
-    
-The following entries will be inserted to the config files:  
-address: 192.0.2.10  
-gateway: 192.0.2.1  
-hostname: srv.mydomain.tld  
+TODO
 
 
-## Warning
-
-Remove the existing address and gateway entries in the ```/etc/network/interfaces``` as well as the hostname in the ```/etc/hosts``` and ```/etc/hostname```
