@@ -9,7 +9,7 @@ if [[ $EUID -ne 0 ]]; then
 
 
 #
-# Adjust your settings here !!! 
+# Adjust your settings here !!!
 #
 
 # Automatic NIC name retrieval
@@ -28,7 +28,7 @@ p2p=10.0.0.10
 netmask=64
 
 
-# 
+#
 # No changes after this line !!!
 #
 
@@ -94,4 +94,7 @@ if [ "$subnetv4" == "$ipv4" ]
                 netmask $netmask
                 gateway $gwv6" > /etc/network/interfaces
     fi
-reboot
+    echo -e "\e[32mConfiguration successfully completed!"
+    echo -e "\e[32mSystem will reboot in 5s"
+    sleep 5
+    reboot
