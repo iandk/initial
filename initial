@@ -5,24 +5,37 @@ if [[ $EUID -ne 0 ]]; then
     fi
 
 
-# Variables
-
-# ADJUST SETTINGS HERE !!!
+# Config
 
 
+#
+# Adjust your settings here !!! 
+#
+
+# Automatic NIC name retrieval
 nic=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
+# IPv4 Gatway
 gwv4=10.0.0.10
+# IPv6 Gateway
 gwv6=2a06:1111:1111:1111::10
+# Subnet IPv4 (Note that the last octet is missing, which is asked when running the script)
+subnetv4=10.0.0.
+# Subnet IPv6 (Note that the last octet is missing, which is asked when running the script)
+subnetv6=2a06:1111:1111:1111::
+# IPv4 Pointopoint Address which equals the IPv4 Gateway (Required by Hetzner)
 p2p=10.0.0.10
+# IPv6 subnet size
 netmask=64
 
-# DO NOT CHANGE AFTER THIS LINE !!!
 
+# 
+# No changes after this line !!!
+#
 
 
 read -e -p "Enter Hostname: " hostname
-read -e -p "Enter IPv4: " -i "10.0.0." ipv4
-read -e -p "Enter IPv6: " -i "2a06:1111:1111:1111::" ipv6
+read -e -p "Enter IPv4: " -i $subnetv4 ipv4
+read -e -p "Enter IPv6: " -i $subnetv6 ipv6
 
 
 
@@ -50,9 +63,9 @@ hostname -F /etc/hostname
 
 # Network config
 
-# Check if user submited IPv4 and IPv6 address. If both exists: Dualstack; If only IPv6: IPv6 only
+# Check if user submited an IPv4 and IPv6 address. If both exist: Dualstack; If only IPv6: IPv6 only
 
-    if [ -z "$ipv4" ]
+if [ "$subnetv4" == "$ipv4" ]
     then
 
       # IPv6 only
@@ -81,7 +94,4 @@ hostname -F /etc/hostname
                 netmask $netmask
                 gateway $gwv6" > /etc/network/interfaces
     fi
-    echo -e "\e[32mConfiguration successfully completed!"
-    echo -e "\e[32mSystem will reboot in 5s"
-    sleep 5
-    reboot
+reboot
