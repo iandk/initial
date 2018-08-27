@@ -4,16 +4,10 @@ if [[ $EUID -ne 0 ]]; then
       exit 1
     fi
 
-
-# Config
-
-
 #
 # Adjust your settings here !!!
 #
 
-# Automatic NIC name retrieval
-nic=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
 # IPv4 Gatway
 gwv4=10.0.0.10
 # IPv6 Gateway
@@ -22,7 +16,7 @@ gwv6=2a06:1111:1111:1111::10
 subnetv4=10.0.0.
 # Subnet IPv6 (Note that the last octet is missing, which is asked when running the script)
 subnetv6=2a06:1111:1111:1111::
-# IPv4 Pointopoint Address which equals the IPv4 Gateway (Required by Hetzner)
+# IPv4 Pointopoint Address which is equal to the IPv4 Gateway (Required by Hetzner)
 p2p=10.0.0.10
 # IPv6 subnet size
 netmask=64
@@ -32,6 +26,8 @@ netmask=64
 # No changes after this line !!!
 #
 
+# Automatic NIC name retrieval
+nic=$(find /sys/class/net ! -type d | xargs --max-args=1 realpath  | awk -F\/ '/pci/{print $NF}')
 
 read -e -p "Enter Hostname: " hostname
 read -e -p "Enter IPv4: " -i $subnetv4 ipv4
@@ -51,8 +47,8 @@ cp /etc/hostname /etc/hostname.bak
 echo $hostname > /etc/hostname
 echo "$ipv4 $hostname $hostname
       $ipv6 $hostname $hostname
-      127.0.0.1 localhost
-      ::1 ip6-localhost ip6-loopback
+      127.0.0.1 $hostname $hostname
+      ::1 $hostname $hostname
       fe00::0 ip6-localnet
       ff00::0 ip6-mcastprefix
       ff02::1 ip6-allnodes
@@ -88,7 +84,7 @@ if [ "$subnetv4" == "$ipv4" ]
                 address $ipv4
                 gateway $gwv4
                 pointopoint $p2p
-                dns-nameservers 8.8.8.8 8.8.4.4
+                dns-nameservers 1.1.1.1 1.0.0.1 2606:4700:4700::1111 2606:4700:4700::1001
             iface $nic inet6 static
                 address $ipv6
                 netmask $netmask
